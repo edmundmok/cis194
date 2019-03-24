@@ -24,3 +24,33 @@ parseMessage x
 
 parse :: String -> [LogMessage]
 parse x = map parseMessage $ lines x
+
+-- Assumes that the given MessageTree t is sorted.
+insert :: LogMessage -> MessageTree -> MessageTree
+insert (Unknown _) t = t
+insert m@(LogMessage _ ts1 _) t =
+  case t of
+    Leaf -> Node Leaf m Leaf
+    (Node _ (Unknown _) _) -> error "Should not have Unknown messages in MessageTree."
+    (Node l m'@(LogMessage _ ts2 _) r) -> 
+      case ts1 <= ts2 of
+        True -> Node (insert m l) m' r
+        False -> Node l m' (insert m r)
+
+build :: [LogMessage] -> MessageTree
+build ms = foldl (\t x -> insert x t) Leaf ms
+
+inOrder :: MessageTree -> [LogMessage]
+inOrder Leaf = []
+inOrder (Node l m r) = inOrder l ++ [m] ++ inOrder r
+
+isRelevantMessage :: LogMessage -> Bool
+isRelevantMessage (LogMessage (Error v) _ _) = v >= 50
+isRelevantMessage _ = False
+
+getMessageContent :: LogMessage -> String
+getMessageContent (LogMessage _ _ s) = s
+getMessageContent (Unknown s) = s
+
+whatWentWrong :: [LogMessage] -> [String]
+whatWentWrong ms = map getMessageContent $ filter isRelevantMessage (inOrder $ build ms)
