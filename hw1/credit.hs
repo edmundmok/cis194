@@ -13,4 +13,4 @@ sumDigits :: [Integer] -> Integer
 sumDigits = sum . map (sum . toDigits)
 
 validate :: Integer -> Bool
-validate x = (sumDigits $ doubleEveryOther $ toDigits x) `rem` 10  == 0
+validate = (==) 0 . flip rem 10 . (sumDigits . doubleEveryOther . toDigits)
