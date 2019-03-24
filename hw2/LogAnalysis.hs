@@ -13,7 +13,7 @@ parseMessage x
   | l == 0 =  Unknown x
   | otherwise =
     let 
-      t = head xs
+      t  = head xs
       ts = tail xs
     in case t of
       "I" -> parseHelper Info ts
