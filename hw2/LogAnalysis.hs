@@ -22,4 +22,5 @@ parseMessage x
       _   -> Unknown x
   where xs = words x; l = length xs
 
---parse :: String -> [LogMessage]
+parse :: String -> [LogMessage]
+parse x = map parseMessage $ lines x
