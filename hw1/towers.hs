@@ -9,6 +9,5 @@ hanoi n a b c
 
 hanoi4 :: Integer -> Peg -> Peg -> Peg -> Peg -> [Move]
 hanoi4 n a b c d
-  | n == 0 = []
-  | n == 1 = [(a, b)]
+  | n <= 1 = hanoi n a b c
   | otherwise = hanoi4 (n-2) a d b c ++ hanoi 2 a b c ++ hanoi4 (n-2) d b a c
