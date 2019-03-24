@@ -3,9 +3,4 @@
 module Golf where
 
 skips :: [a] -> [[a]]
-skips xs = skipsHelper xs 1
-
-skipsHelper :: [a] -> Int -> [[a]]
-skipsHelper xs n
-  | n > length xs = []
-  | otherwise = map fst (filter (\(_, y) -> (y `mod` n == 0)) (zip xs [1..])) : skipsHelper xs (n+1)
+skips xs = [map fst (filter (\(_, y) -> (y `mod` n == 0)) (zip xs [1..]))  | n <- [1..length xs]]
