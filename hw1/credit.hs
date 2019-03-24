@@ -7,7 +7,7 @@ toDigits :: Integer -> [Integer]
 toDigits = reverse . toDigitsRev
 
 doubleEveryOther :: [Integer] -> [Integer]
-doubleEveryOther xs = foldl (\ys (i, x) -> x * (if odd i then 2 else 1) : ys) [] (zip [0..] (reverse xs))
+doubleEveryOther = foldl (\ys (i, x) -> x * (if odd i then 2 else 1) : ys) [] . (zip [0..] . reverse)
 
 sumDigits :: [Integer] -> Integer
 sumDigits = sum . map (sum . toDigits)

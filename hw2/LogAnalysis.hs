@@ -23,7 +23,7 @@ parseMessage x
   where xs = words x; l = length xs
 
 parse :: String -> [LogMessage]
-parse x = map parseMessage $ lines x
+parse = map parseMessage . lines
 
 -- Assumes that the given MessageTree t is sorted.
 insert :: LogMessage -> MessageTree -> MessageTree
@@ -38,7 +38,7 @@ insert m@(LogMessage _ ts1 _) t =
         False -> Node l m' (insert m r)
 
 build :: [LogMessage] -> MessageTree
-build ms = foldl (flip insert) Leaf ms
+build = foldl (flip insert) Leaf
 
 inOrder :: MessageTree -> [LogMessage]
 inOrder Leaf = []
@@ -53,4 +53,4 @@ getMessageContent (LogMessage _ _ s) = s
 getMessageContent (Unknown s) = s
 
 whatWentWrong :: [LogMessage] -> [String]
-whatWentWrong ms = map getMessageContent $ filter isRelevantMessage (inOrder $ build ms)
+whatWentWrong = map getMessageContent . filter isRelevantMessage . (inOrder . build)
