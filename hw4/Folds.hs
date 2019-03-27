@@ -2,6 +2,8 @@
 
 module Folds where
 
+import Data.List
+
 fun1 :: [Integer] -> Integer
 fun1 [] = 1
 fun1 (x:xs)
@@ -19,3 +21,13 @@ fun1' = product . map ((-) 2) . filter even
 
 fun2' :: Integer -> Integer
 fun2' = sum . filter even . takeWhile (>1) . iterate (\x -> if even x then div x 2 else 3 * x + 1)
+
+data Tree a = Leaf
+            | Node Integer (Tree a) a (Tree a)
+  deriving (Show, Eq)
+
+xor :: [Bool] -> Bool
+xor = odd . foldl' (\x y -> x + fromEnum y) 0
+
+map' :: (a -> b) -> [a] -> [b]
+map' f = foldr (\x y -> f x : y) []
