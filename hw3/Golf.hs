@@ -17,7 +17,7 @@ localMaxima _ = []
 histogram :: [Integer] -> String
 histogram xs =
   let
-    ys = map (pred . length) (group $ sort (filter (\x -> x >= 0 && x <= 9) xs ++ [0..9]))
+    ys = map (pred . length) (group $ sort $ filter (\x -> x >= 0 && x <= 9) xs ++ [0..9])
   in
     unlines [concat [if (ys !! c > r) then "*" else " " | c <- [0..9]] | r <- reverse [0..(maximum ys)-1]] 
     ++ "==========\n0123456789\n"
