@@ -1,3 +1,8 @@
+module Credit where
+
+import Data.List
+
+
 toDigitsRev :: Integer -> [Integer]
 toDigitsRev x
   | x <= 0     = []
@@ -7,7 +12,7 @@ toDigits :: Integer -> [Integer]
 toDigits = reverse . toDigitsRev
 
 doubleEveryOther :: [Integer] -> [Integer]
-doubleEveryOther = foldl (\ys (i, x) -> x * (if odd i then 2 else 1) : ys) [] . (zip [0..] . reverse)
+doubleEveryOther = foldl' (\ys (i, x) -> x * (if odd i then 2 else 1) : ys) [] . (zip [0..] . reverse)
 
 sumDigits :: [Integer] -> Integer
 sumDigits = sum . map (sum . toDigits)
