@@ -8,10 +8,10 @@ skips :: [a] -> [[a]]
 skips xs = [map fst (filter (\(_, y) -> (y `mod` n == 0)) (zip xs [1..])) | n <- [1..length xs]]
 
 localMaxima :: [Integer] -> [Integer]
-localMaxima (x:y:z:zs)
-  | (y > x && y > z) = y : xs
-  | otherwise        = xs
-  where xs = localMaxima (y:z:zs)
+localMaxima (x:xs@(y:z:_))
+  | (y > x && y > z) = y : xs'
+  | otherwise        = xs'
+  where xs' = localMaxima xs
 localMaxima _ = []
 
 histogram :: [Integer] -> String
