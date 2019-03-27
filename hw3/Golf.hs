@@ -5,7 +5,7 @@ module Golf where
 import Data.List
 
 skips :: [a] -> [[a]]
-skips xs = [map fst (filter (\(_, y) -> (y `mod` n == 0)) (zip xs [1..])) | n <- [1..length xs]]
+skips xs = [map fst $ filter (\(_, y) -> (y `mod` n == 0)) (zip xs [1..]) | n <- [1..length xs]]
 
 localMaxima :: [Integer] -> [Integer]
 localMaxima (x:xs@(y:z:_))
