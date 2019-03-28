@@ -38,8 +38,15 @@ insertIntoTree v (Node _ l@(Node h' _ _ _) v' r@(Node h'' _ _ _))
                 in Node ((+1) $ max hh' h'') l' v' r
   | otherwise = let r'@(Node hh'' _ _ _) = insertIntoTree v r
                 in Node ((+1) $ max h' hh'') l v' r'
+
 xor :: [Bool] -> Bool
 xor = odd . foldl' (\x y -> x + fromEnum y) 0
 
 map' :: (a -> b) -> [a] -> [b]
 map' f = foldr (\x y -> f x : y) []
+
+-- g is a function (accumulator) that takes an a -> a' (initially id; abusing notation here)
+-- g = \a -> (f a x) after first round
+-- want: substitute some a such that it evaluates the a first (i.e. apply the result of (f a' x) within)
+myFoldl :: (a -> b -> a) -> a -> [b] -> a
+myFoldl f base xs = foldr (\x g a -> g (f a x)) id xs base
