@@ -50,3 +50,6 @@ map' f = foldr (\x y -> f x : y) []
 -- want: substitute some a such that it evaluates the a first (i.e. apply the result of (f a' x) within)
 myFoldl :: (a -> b -> a) -> a -> [b] -> a
 myFoldl f base xs = foldr (\x g a -> g (f a x)) id xs base
+
+myFoldr :: (b -> a -> a) -> a -> [b] -> a
+myFoldr f base xs = foldl (\g x a -> g (f x a)) id xs base
