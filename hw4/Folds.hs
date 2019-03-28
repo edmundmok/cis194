@@ -51,5 +51,6 @@ map' f = foldr (\x y -> f x : y) []
 myFoldl :: (a -> b -> a) -> a -> [b] -> a
 myFoldl f base xs = foldr (\x g a -> g (f a x)) id xs base
 
+-- note: this foldr version still does not work on infinite lists, since foldl cannot work on infinite lists.
 myFoldr :: (b -> a -> a) -> a -> [b] -> a
 myFoldr f base xs = foldl (\g x a -> g (f x a)) id xs base
