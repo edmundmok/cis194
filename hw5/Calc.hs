@@ -13,4 +13,4 @@ eval (Add l r) = (eval l) + (eval r)
 eval (Mul l r) = (eval l) * (eval r)
 
 evalStr :: String -> Maybe Integer
-evalStr = parseExp Lit Add Mul >=> (\x -> return (eval x))
+evalStr = parseExp Lit Add Mul >=> (return . eval)
