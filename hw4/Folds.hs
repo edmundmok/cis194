@@ -57,7 +57,7 @@ myFoldr :: (b -> a -> a) -> a -> [b] -> a
 myFoldr f base xs = foldl (\g x a -> g (f x a)) id xs base
 
 sieveSundaram :: Integer -> [Integer]
-sieveSundaram n =  filter (<n) $ map ((+1) . (*2)) $ filter (not . (flip elem) sieved) [1..n]
+sieveSundaram n = map ((+1) . (*2)) $ filter (not . (flip elem) sieved) [1..n]
   where sieved = map (\(x, y) -> x + y + 2 * x * y) $ filter (\(x, y) -> x <= y) $ cartProd [1..n] [1..n]
 
 cartProd :: [a] -> [b] -> [(a, b)]
