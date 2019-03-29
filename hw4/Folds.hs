@@ -48,9 +48,18 @@ map' f = foldr (\x y -> f x : y) []
 -- g is a function (accumulator) that takes an a -> a' (initially id; abusing notation here)
 -- g = \a -> (f a x) after first round
 -- want: substitute some a such that it evaluates the a first (i.e. apply the result of (f a' x) within)
+-- use function application to nest more functions within
 myFoldl :: (a -> b -> a) -> a -> [b] -> a
 myFoldl f base xs = foldr (\x g a -> g (f a x)) id xs base
 
 -- note: this foldr version still does not work on infinite lists, since foldl cannot work on infinite lists.
 myFoldr :: (b -> a -> a) -> a -> [b] -> a
 myFoldr f base xs = foldl (\g x a -> g (f x a)) id xs base
+
+sieveSundaram :: Integer -> [Integer]
+sieveSundaram n =  filter (<n) $ map ((+) 1 . (*) 2) $ filter (not . (flip elem) sieved) [1..n]
+  where sieved = map (\(x, y) -> x + y + 2 * x * y) $ filter (\(x, y) -> x <= y) $ cartProd [1..n] [1..n]
+
+
+cartProd :: [a] -> [b] -> [(a, b)]
+cartProd xs ys = [(x,y) | x <- xs, y <- ys]
