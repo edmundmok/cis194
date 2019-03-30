@@ -102,6 +102,10 @@ maybeMul (Just x) (Just y) = Just (x * y)
 maybeMul _ _               = Nothing
 
 instance Expr (M.Map String Integer -> Maybe Integer) where
+  -- note: this is the same as:
+  -- lit x = (\_ -> return x)
+  -- add f g = (\m -> maybeAdd (f m) (g m))
+  -- mul f g = (\m -> maybeMul (f m) (g m))
   lit x _  = return x
   add f g m = maybeAdd (f m) (g m)
   mul f g m = maybeMul (f m) (g m)
