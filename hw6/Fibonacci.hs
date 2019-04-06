@@ -69,3 +69,10 @@ instance Num (Stream Integer) where
   (*) (Cons x xs') ys@(Cons y ys') = Cons (x * y) ((streamMap (*x) ys') + (xs' * ys))
   negate xs = streamMap negate xs
   fromInteger n = Cons n $ streamRepeat 0
+
+instance Fractional (Stream Integer) where
+  (/) (Cons x xs) (Cons y ys) = q
+    where q = Cons (div x y) (streamMap ((flip div) y) (xs - q * ys))
+
+fibs3 :: Stream Integer
+fibs3 = x / (1 - x - (x * x))
