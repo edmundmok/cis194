@@ -46,4 +46,13 @@ nats :: Stream Integer
 nats = streamFromSeed (+1) 0
 
 interleaveStreams :: Stream a -> Stream a -> Stream a
-interleaveStreams (Cons x xs) (Cons y ys) = Cons x $ Cons y $ interleaveStreams xs ys
+interleaveStreams (Cons x xs) ys = Cons x $ interleaveStreams ys xs
+-- below won't work for ruler since it will always need to force the second argument out
+-- and thus keep asking for the next evaluation of genStream (n+1).
+-- whereas the above version only needs one argument at a time, which can simply be
+-- retrieved from streamRepeat n easily.
+-- interleaveStreams (Cons x xs) (Cons y ys) = Cons x $ Cons y $ interleaveStreams xs ys
+
+ruler :: Stream Integer
+ruler = genStream 0
+  where genStream n = interleaveStreams (streamRepeat n) (genStream (n+1))
