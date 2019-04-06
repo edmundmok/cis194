@@ -10,3 +10,9 @@ fib n
 
 fibs1 :: [Integer]
 fibs1 = map fib [0..]
+
+-- Exercise 2
+-- Compiler magic here; fibs2 is reused.
+fibs2 :: [Integer]
+fibs2 = scanl (+) 0 (1:fibs2)
+
