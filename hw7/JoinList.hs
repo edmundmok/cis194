@@ -36,4 +36,24 @@ indexJ i (Append x l r)
   where xs = getSize $ size $ x; ls = getSize $ size $ tag l
 indexJ _ _ = Nothing
 
+eg :: JoinList Size Char
 eg = Append (Size 4) (Append (Size 3) (Single (Size 1) 'y') (Append (Size 2) (Single (Size 1) 'e') (Single (Size 1) 'a'))) (Single (Size 1) 'h')
+
+dropJ :: (Sized b, Monoid b) => Int -> JoinList b a -> JoinList b a
+dropJ n x | n <= 0        = x
+dropJ _ Empty             = Empty
+dropJ _ (Single _ _)      = Empty
+dropJ n (Append x l r)
+  | n >= xs   = Empty
+  | n < ls    =
+    let
+      l' = dropJ n l
+    in
+      Append (mappend (tag l') (tag r)) l' r
+  | otherwise =
+    let
+      r' = dropJ (n-ls) r
+    in
+      Append (tag r') Empty r'
+  where xs = getSize $ size $ x; ls = getSize $ size $ tag l
+
