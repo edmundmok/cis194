@@ -57,3 +57,16 @@ dropJ n (Append x l r)
       Append (tag r') Empty r'
   where xs = getSize $ size $ x; ls = getSize $ size $ tag l
 
+takeJ :: (Sized b, Monoid b) => Int -> JoinList b a -> JoinList b a
+takeJ n _ | n <= 0     = Empty
+takeJ _ Empty          = Empty
+takeJ _ x@(Single _ _) = x
+takeJ n y@(Append x l r)
+  | n >= xs    = y
+  | n <= ls    = takeJ n l
+  | otherwise  =
+    let
+      r' = takeJ (n-ls) r
+    in
+      Append (mappend (tag l) (tag r')) l r'
+  where xs = getSize $ size $ x; ls = getSize $ size $ tag l
