@@ -3,7 +3,9 @@
 
 module JoinList where
 
+import Data.Monoid ((<>))
 import Sized
+
 
 data JoinList m a = Empty
                   | Single m a
@@ -19,7 +21,7 @@ instance Num a => Monoid (Product a) where
 
 -- Exercise 1
 (+++) :: Monoid m => JoinList m a -> JoinList m a -> JoinList m a
-(+++) x y = Append (mappend (tag x) (tag y)) x y
+(+++) x y = Append (tag x <> tag y) x y
 
 tag :: Monoid m => JoinList m a -> m
 tag Empty           = mempty
@@ -49,7 +51,7 @@ dropJ n (Append x l r)
     let
       l' = dropJ n l
     in
-      Append (mappend (tag l') (tag r)) l' r
+      Append (tag l' <> tag r) l' r
   | otherwise =
     let
       r' = dropJ (n-ls) r
@@ -68,5 +70,5 @@ takeJ n y@(Append x l r)
     let
       r' = takeJ (n-ls) r
     in
-      Append (mappend (tag l) (tag r')) l r'
+      Append (tag l <> tag r') l r'
   where xs = getSize $ size $ x; ls = getSize $ size $ tag l
