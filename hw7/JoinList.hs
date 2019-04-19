@@ -86,7 +86,11 @@ scoreLine x = Single (scoreString x) x
 fromStringHelper :: Int -> Int -> [String] -> JoinList (Score, Size) String
 fromStringHelper low high ls
   | low > high = Empty
-  | low == high = Single (scoreString (ls !! low), Size 1) (ls !! low)
+  | low == high =
+    let
+      s = ls !! low
+    in
+      Single (scoreString s, Size 1) s
   | otherwise =
     let
       mid = (low + high) `div` 2
