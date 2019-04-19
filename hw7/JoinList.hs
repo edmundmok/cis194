@@ -6,7 +6,9 @@
 
 module JoinList where
 
+import Buffer
 import Data.Monoid ((<>))
+import Editor
 import Sized
 import Scrabble
 
@@ -79,3 +81,72 @@ takeJ n y@(Append x l r)
 
 scoreLine :: String -> JoinList Score String
 scoreLine x = Single (scoreString x) x
+
+-- Tries to build a balanced tree.
+fromStringHelper :: Int -> Int -> [String] -> JoinList (Score, Size) String
+fromStringHelper low high ls
+  | low > high = Empty
+  | low == high = Single (scoreString (ls !! low), Size 1) (ls !! low)
+  | otherwise =
+    let
+      mid = (low + high) `div` 2
+      l = fromStringHelper low mid ls
+      r = fromStringHelper (mid+1) high ls
+    in
+      Append (tag l <> tag r) l r
+
+instance Buffer (JoinList (Score, Size) String) where
+  -- | Convert a buffer to a String.
+  toString Empty = ""
+  toString (Single _ s) = s
+  toString (Append _ l r) = toString l ++ toString r
+
+  -- | Create a buffer from a String.
+  --fromString s = foldl1' (+++) $ map (\t -> Single (scoreString t, Size 1) t) $ lines s
+  fromString s = fromStringHelper 0 (numOfLines - 1) ls
+    where ls = lines s; numOfLines = length ls
+
+  -- | Extract the nth line (0-indexed) from a buffer.  Return Nothing
+  -- for out-of-bounds indices.
+  line = indexJ
+
+  -- | @replaceLine n ln buf@ returns a modified version of @buf@,
+  --   with the @n@th line replaced by @ln@.  If the index is
+  --   out-of-bounds, the buffer should be returned unmodified.
+  replaceLine _ _ Empty = Empty
+  replaceLine i _ x | i < 0 || i >= (getSize $ size $ tag x) = x
+  replaceLine _ s (Single _ _) = fromString s
+  replaceLine i s (Append _ l r)
+    | i < ls =
+      let
+        l' = replaceLine i s l
+      in
+        Append (tag l' <> tag r) l' r
+    | otherwise =
+      let
+        r' = replaceLine (i-ls) s r
+      in
+        Append (tag l <> tag r') l r'
+    where ls = getSize $ size $ tag l
+
+  ---- | Compute the number of lines in the buffer.
+  numLines Empty = 0
+  numLines (Single (_, Size s) _) = s
+  numLines (Append (_, Size s) _ _) = s
+
+  -- | Compute the value of the buffer, i.e. the amount someone would
+  --   be paid for publishing the contents of the buffer.
+  value Empty = 0
+  value (Single (Score s, _) _) = s
+  value (Append (Score s, _) _ _) = s
+
+jlBuffer :: JoinList (Score, Size) String
+jlBuffer = fromString $ unlines
+         [ "This buffer is for notes you don't want to save, and for"
+         , "evaluation of steam valve coefficients."
+         , "To load a different file, type the character L followed"
+         , "by the name of the file."
+         ]
+
+main :: IO()
+main = runEditor editor jlBuffer
