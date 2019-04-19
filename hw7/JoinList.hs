@@ -1,10 +1,14 @@
 {-# OPTIONS_GHC -Wall #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE FlexibleInstances
+           , GeneralizedNewtypeDeriving
+           , TypeSynonymInstances
+  #-}
 
 module JoinList where
 
 import Data.Monoid ((<>))
 import Sized
+import Scrabble
 
 
 data JoinList m a = Empty
@@ -72,3 +76,6 @@ takeJ n y@(Append x l r)
     in
       Append (tag l <> tag r') l r'
   where xs = getSize $ size $ x; ls = getSize $ size $ tag l
+
+scoreLine :: String -> JoinList Score String
+scoreLine x = Single (scoreString x) x
