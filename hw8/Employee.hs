@@ -1,6 +1,6 @@
 module Employee where
 
-import           Data.Tree
+import Data.Tree
 
 -- Employee names are represented by Strings.
 type Name = String
@@ -14,6 +14,15 @@ data Employee = Emp { empName :: Name, empFun :: Fun }
   deriving (Show, Read, Eq)
 
 -- A small company hierarchy to use for testing purposes.
+{-
+                            stan (9)
+                            /       \
+                    bob (2)           sarah(17)
+                    /     \                 \
+              joe (5)     fred(3)           sam (4)
+              /   \
+      john (1)    sue(5)
+-}
 testCompany :: Tree Employee
 testCompany
   = Node (Emp "Stan" 9)
@@ -29,6 +38,15 @@ testCompany
       ]
     ]
 
+{-
+                            stan (9)
+                            /       \
+                    bob (3)           sarah(17)
+                    /     \                 \
+              joe (5)     fred(3)           sam (4)
+              /   \
+      john (1)    sue(5)
+-}
 testCompany2 :: Tree Employee
 testCompany2
   = Node (Emp "Stan" 9)
