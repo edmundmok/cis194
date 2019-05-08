@@ -75,13 +75,6 @@ instance Applicative Parser where
             case g s' of
               Nothing -> Nothing
               Just (x, s'') -> Just (f' x, s'')
-  --(Parser f <*> Parser g) s =
-  --  case f s of
-  --    Nothing -> Nothing
-  --    Just (f', s') ->
-  --      case g s' of
-  --        Nothing -> Nothing
-  --        Just (x, s'') -> Just (f' x, s'')
 
   --(<*>) :: f (a -> b) -> f a -> f b
   --(<*>) :: Parser (a -> b) -> Parser a -> Parser b
