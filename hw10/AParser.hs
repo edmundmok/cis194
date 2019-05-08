@@ -5,7 +5,7 @@
 module AParser where
 
 import Control.Applicative
-
+import Control.Monad
 import Data.Char
 
 -- A parser for a value of type a is a function which takes a String
@@ -57,3 +57,15 @@ posInt = Parser f
 ------------------------------------------------------------
 -- Your code goes below here
 ------------------------------------------------------------
+
+first :: (a -> b) -> (a, c) -> (b, c)
+first f (x, y) = (f x, y)
+
+instance Functor Parser where
+  fmap g (Parser f) = Parser (f >=> (return . first g))
+    --where
+    --  h xs = (f xs) >>= (return . first g)
+      --h xs =
+      --  case f xs of
+      --    Nothing -> Nothing
+      --    Just fxs' -> Just (first g fxs')
