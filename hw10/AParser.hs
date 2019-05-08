@@ -91,3 +91,12 @@ parseName = pure "name"
 
 parsePhone :: Parser String
 parsePhone = pure "phone"
+
+abParser :: Parser (Char, Char)
+abParser = (\x y -> (x, y)) <$> satisfy (== 'a') <*> satisfy (== 'b')
+
+abParser_ :: Parser ()
+abParser_ = (\_ _ -> ()) <$> satisfy (== 'a') <*> satisfy (== 'b')
+
+intPair :: Parser [Integer]
+intPair = (\x _ y -> [x, y]) <$> posInt <*> satisfy (== ' ') <*> posInt
