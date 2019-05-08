@@ -63,9 +63,38 @@ first f (x, y) = (f x, y)
 
 instance Functor Parser where
   fmap g (Parser f) = Parser (f >=> (return . first g))
-    --where
-    --  h xs = (f xs) >>= (return . first g)
-      --h xs =
-      --  case f xs of
-      --    Nothing -> Nothing
-      --    Just fxs' -> Just (first g fxs')
+
+instance Applicative Parser where
+  pure x = Parser (\s -> Just (x, s))
+  Parser f <*> Parser g = Parser h
+    where
+      h s =
+        case f s of
+          Nothing -> Nothing
+          Just (f', s') ->
+            case g s' of
+              Nothing -> Nothing
+              Just (x, s'') -> Just (f' x, s'')
+  --(Parser f <*> Parser g) s =
+  --  case f s of
+  --    Nothing -> Nothing
+  --    Just (f', s') ->
+  --      case g s' of
+  --        Nothing -> Nothing
+  --        Just (x, s'') -> Just (f' x, s'')
+
+  --(<*>) :: f (a -> b) -> f a -> f b
+  --(<*>) :: Parser (a -> b) -> Parser a -> Parser b
+
+  -- runParser :: String -> Maybe (a -> b, String)
+  -- runParser :: String -> Maybe (a, String)
+
+type Name = String
+data Employee = Emp { name :: Name, phone :: String }
+  deriving (Show, Read, Eq)
+
+parseName :: Parser Name
+parseName = pure "name"
+
+parsePhone :: Parser String
+parsePhone = pure "phone"
